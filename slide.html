@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{margin:0;padding:0;}
+        .clearfix:after{content:""; display:block; clear:both;}
+        .slider{width:850px;height:100px;position:relative;margin:100px auto;overflow:hidden;border:1px solid red;}
+        .slider .btn{ position:absolute; top:50%; margin-top:-30px;width:60px;height:60px;background:red;opacity:0.8;}
+        .slider-wrapper{position:absolute;left:0;top:0;}
+        .slider .prev{ left:0;}
+        .slider .next{ right:0;}
+        .slider li{list-style:none; width:170px;height:100px;margin-right:10px;float:left;background:blue;text-align: center;color:#fff;font-size:80px;line-height: 100px;}
+        .slider li:last-child{margin-right:0;}
+    </style>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script>
+        $(function(){
+            //设置wrapper宽度
+            function setWrapperWidth(){
+                 var wrapperWidth = 0;
+                $(".slider li").each(function(index,item){
+                    wrapperWidth += $(this).outerWidth(true);
+                });
+                console.log(wrapperWidth);
+                $(".slider-wrapper").width(wrapperWidth);
+                return wrapperWidth;
+            }
+
+           //click
+           var page = 1;
+           var wrapperWidth = setWrapperWidth();
+           var sWidth = $('.slider').innerWidth();
+           var LiW = $(".slider li").outerWidth(true);
+           var itemCount = Math.floor(sWidth/LiW);
+           var itemWidth = LiW*itemCount;
+           var total = $(".slider li").length;
+           var maxPage = Math.ceil(total/itemCount);
+           var flag = false;
+
+           $(".slider .next").click(function(){
+               if(page === maxPage) return;
+               if(flag){
+                   return;
+               }
+               flag = true;
+               page++;
+               $(".prev").show("slow");
+               if(page === maxPage){
+                   $(".next").hide("slow");
+               }
+               var moveLeft = page === maxPage ? -(wrapperWidth-sWidth) : -itemWidth*(page - 1);
+               $(".slider-wrapper").animate({left:moveLeft},1000,function(){
+                   flag = false;
+               });
+           });
+
+           $(".slider .prev").click(function(){
+               if(page === 1) return;
+               if(flag){
+                   return;
+               }
+               flag = true;
+               page--;
+               $(".next").show("slow");
+               if(page === 1){
+                   $(".prev").hide("slow");
+               }
+               $(".slider-wrapper").animate({left:-itemWidth*(page - 1)},1000,function(){
+                   flag = false;
+               });
+           });
+        });
+    </script>
+</head>
+<body>
+    <div class="slider">
+        <ul class="slider-wrapper clearfix">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+            <li>9</li>
+            <li>10</li>
+            <li>11</li>
+            <li>12</li>
+            <li>13</li>
+            <li>14</li>
+            <li>15</li>
+        </ul>
+        <span class="prev btn"><</span>
+        <span class="next btn">></span>
+    </div>
+</body>
+</html>
